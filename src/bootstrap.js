@@ -41,9 +41,9 @@ const startCore = () => {
       const [ channel, hash ] = oaVersion.split('-'); // Split via -
 
       bw.webContents.executeJavaScript(readFileSync(join(__dirname, 'mainWindow.js'), 'utf8')
-        .replaceAll('<hash>', hash || 'custom')
+        .replaceAll('<hash>', hash)
         .replaceAll('<notrack>', oaConfig.noTrack)
-        .replace('<css>', (oaConfig.css ?? '').replaceAll('`', '\\`').replaceAll('\\', '\\\\')));
+        .replace('<css>', (oaConfig.css ?? '').replaceAll('\\', '\\\\').replaceAll('`', '\\`')));
 
       if (oaConfig.js) bw.webContents.executeJavaScript(oaConfig.js);
 
@@ -95,7 +95,7 @@ const startUpdate = () => {
     inst.on('InconsistentInstallerState', fatal);
     inst.on('update-error', console.error);
 
-    require('./winFirst').do(inst);
+    require('./winFirst').do();
   } else {
     moduleUpdater.init(Constants.UPDATE_ENDPOINT, buildInfo);
   }
@@ -137,6 +137,5 @@ module.exports = () => {
 
   if (!app.requestSingleInstanceLock() && !(process.argv?.includes?.('--multi-instance') || oaConfig.multiInstance === true)) return app.quit();
 
-  if (app.isReady()) startUpdate();
-    else app.once('ready', startUpdate);
+  app.whenReady().then(startUpdate);
 };

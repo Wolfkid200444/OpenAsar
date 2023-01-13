@@ -146,10 +146,9 @@ class Updater extends require('events').EventEmitter {
     if (next != cur && !options?.allowObsoleteHost) {
       // Retain OpenAsar
       const fs = require('original-fs');
-  
-      const getAsar = (p) => join(p, '..', 'resources', 'app.asar');
-      const cAsar = getAsar(cur);
-      const nAsar = getAsar(next);
+ 
+      const cAsar = join(require.main.filename, '..');
+      const nAsar = join(next, '..', 'resources', 'app.asar');
 
       try {
         fs.copyFileSync(nAsar, nAsar + '.backup'); // Copy new app.asar to backup file (<new>/app.asar -> <new>/app.asar.backup)

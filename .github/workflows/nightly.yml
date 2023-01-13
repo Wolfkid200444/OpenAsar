@@ -24,7 +24,7 @@ jobs:
     - name: Pack base asar
       run: |
         npm i -g asar
-        sed -i -e "s/nightly/nightly-$(git rev-parse HEAD | cut -c 1-7)'/" src/index.js
+        sed -i -e "s/nightly/nightly-$(git rev-parse acrylic | cut -c 1-7)'/" src/index.js
         node scripts/strip.js
         npx asar pack src app.asar
 
@@ -151,7 +151,7 @@ jobs:
         git tag ${{ env.VERSION }}
         git push origin ${{ env.VERSION }}
         gh release delete ${{ env.VERSION }} -y || true
-        gh release create ${{ env.VERSION }} -t "Acrylic" -n "$(git rev-parse HEAD | cut -c 1-7) | $(git log -1 --pretty=%B)" ${{ env.FILES }}
+        gh release create ${{ env.VERSION }} -t "Acrylic" -n "$(git rev-parse acrylic | cut -c 1-7) | $(git log -1 --pretty=%B)" ${{ env.FILES }}
       env:
         GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         VERSION: 'acrylic'
